@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.example.animeinfoapp'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.animeinfoapp"
@@ -51,7 +51,7 @@ dependencies {
 
     // Architectural Components
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
-    
+
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.6.1"
 
@@ -77,9 +77,9 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.51.1"
 
     // androidx media3 exoplayer
-    implementation "androidx.media3:media3-exoplayer:1.5.1"
-    implementation "androidx.media3:media3-ui:1.5.1"
-    implementation "androidx.media3:media3-exoplayer-hls:1.5.1"
+    implementation "androidx.media3:media3-exoplayer:1.4.1"
+    implementation "androidx.media3:media3-ui:1.4.1"
+    implementation "androidx.media3:media3-exoplayer-hls:1.4.1"
 }
 kapt {
     correctErrorTypes true
