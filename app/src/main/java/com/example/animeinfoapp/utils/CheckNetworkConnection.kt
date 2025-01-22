@@ -8,18 +8,17 @@ import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
 import android.net.NetworkCapabilities.TRANSPORT_ETHERNET
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkRequest
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import javax.inject.Inject
 
-class CheckNetworkConnection(context: Context) : LiveData<Boolean>() {
-    override fun onActive() {
-        super.onActive()
-        checkNetworkConnection()
-    }
+class CheckNetworkConnection @Inject constructor(
+    context: Context
+) {
 
-    override fun onInactive() {
-        super.onInactive()
-        connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
+    private val _isConnected = MutableLiveData<Boolean>().apply { value = true }
+    val isConnected: LiveData<Boolean> get() = _isConnected
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -27,28 +26,32 @@ class CheckNetworkConnection(context: Context) : LiveData<Boolean>() {
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onLosing(network: Network, maxMsToLive: Int) {
             super.onLosing(network, maxMsToLive)
-            postValue(false)
+            Log.e("CheckNetworkConnection", "on Losing")
+            _isConnected.postValue(false)
         }
 
         override fun onLost(network: Network) {
             super.onLost(network)
-            postValue(false)
+            Log.e("CheckNetworkConnection", "onLost")
+            _isConnected.postValue(false)
         }
 
         override fun onUnavailable() {
+            Log.e("CheckNetworkConnection", "onUnavailable")
             super.onUnavailable()
-            postValue(false)
+            _isConnected.postValue(false)
         }
 
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            postValue(true)
-
+            Log.e("CheckNetworkConnection", "onAvailable")
+            _isConnected.postValue(true)
         }
     }
 
     // function to check network
-    private fun checkNetworkConnection() {
+    fun checkNetworkConnection() {
+        Log.e("CheckNetworkConnection", "on checkNetworkConnection")
         val activeNetwork = connectivityManager.activeNetwork
         if (activeNetwork != null) {
             val networkBuilder = NetworkRequest.Builder().apply {
@@ -59,8 +62,11 @@ class CheckNetworkConnection(context: Context) : LiveData<Boolean>() {
                     .addTransportType(TRANSPORT_ETHERNET)
             }.build()
             connectivityManager.registerNetworkCallback(networkBuilder, networkCallback)
-        } else {
-            postValue(false)
         }
+    }
+
+    fun closeNetworkConnection() {
+        Log.e("CheckNetworkConnection", "on closeNetworkConnection")
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }
