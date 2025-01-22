@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.animeinfoapp.databinding.ActivityMainBinding
 import com.example.animeinfoapp.utils.CheckNetworkConnection
+import com.example.animeinfoapp.utils.Constants.Companion.NO_INTERNET
+import com.example.animeinfoapp.utils.Constants.Companion.RETRY_BUTTON
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -31,10 +33,10 @@ class MainActivity : AppCompatActivity() {
                 // if status is false - not connected
                 Snackbar.make(
                     mainActivityBinding.root,
-                    "No internet",
+                    NO_INTERNET,
                     Snackbar.LENGTH_INDEFINITE
                 ).apply {
-                    setAction("Retry", { isNetworkAvailable() })
+                    setAction(RETRY_BUTTON, { isNetworkAvailable() })
                     setActionTextColor(getColor(R.color.black))
                 }.show()
             }
